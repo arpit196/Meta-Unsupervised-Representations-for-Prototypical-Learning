@@ -49,8 +49,10 @@ class Prototypical(Model):
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D((2, 2)),
-
+            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
+        )
+        
+        self.encoder = tf.keras.Sequantial([
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
@@ -79,14 +81,21 @@ class Prototypical(Model):
                                  self.w, self.h, self.c]),
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
-        z = self.encoder(cat)
+        z = self.base_encoder(cat)
+        
+        z_meta = self.encoder(cat)
+        
+        z_att = tf.keras.layers.Attention()(
+            [z, z_meta])
+        
+        z_fin = z_att
 
         # Divide embedding into support and query
-        z_prototypes = tf.reshape(z[:n_class * n_support],
+        z_prototypes = tf.reshape(z_fin[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
         # Prototypes are means of n_support examples
         z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
-        z_query = z[n_class * n_support:]
+        z_query = z_finn[n_class * n_support:]
 
         # Calculate distances between query and prototypes
         dists = calc_euclidian_dists(z_query, z_prototypes)
