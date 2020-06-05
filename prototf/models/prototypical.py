@@ -53,7 +53,7 @@ class Prototypical(Model):
         )
         
         self.encoder = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
@@ -80,8 +80,11 @@ class Prototypical(Model):
         
         z_meta = self.encoder(cat)
         
+        W = tf.Variable(tf.random_normal([z.shape[1], z_meta.shape[1]], stddev=0.35),
+                      name="W")
+        
         z_att = tf.keras.layers.Attention()(
-            [z, z_meta])
+            [z, W*z_meta])
         
         z_fin = z_att
 
