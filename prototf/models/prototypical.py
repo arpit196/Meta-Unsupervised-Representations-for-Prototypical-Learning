@@ -40,7 +40,7 @@ class Prototypical(Model):
         self.w, self.h, self.c = w, h, c
 
         # Encoder as ResNet like CNN with 4 blocks
-        self.encoder = tf.keras.Sequential([
+        self.base_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
@@ -52,7 +52,7 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )
         
-        self.encoder = tf.keras.Sequantial([
+        self.encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
