@@ -87,6 +87,8 @@ class Prototypical(Model):
             [z, tf.matmul(z_meta,W)]
         )
         print(tf.matmul(z_meta,W[tf.newaxis,:,:]))
+        print(z_meta)
+        print(z)
         z_fin = z_att
 
         # Divide embedding into support and query
