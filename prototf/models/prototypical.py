@@ -80,15 +80,10 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.base_encoder(cat)
         
-        z_meta = self.encoder(cat)
-        
-        z_att = tf.keras.layers.Attention()(
-            [z, tf.matmul(z_meta,self.W)]
-        )
         #print(tf.matmul(z_meta,W[tf.newaxis,:,:]))
         #print(z_meta)
         #print(z)
-        z_fin = z_att
+        z_fin = z
 
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z_fin[:n_class * n_support],
