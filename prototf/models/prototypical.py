@@ -80,7 +80,7 @@ class Prototypical(Model):
         
         z_meta = self.encoder(cat)
         
-        W = tf.Variable(tf.random.truncated_normal([z.shape[1], z_meta.shape[1]]),
+        W = tf.Variable(tf.random.truncated_normal([z_meta.shape[1], z.shape[1]]),
                       name="W")
         
         z_att = tf.keras.layers.Attention()(
