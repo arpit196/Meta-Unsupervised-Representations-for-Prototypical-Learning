@@ -38,6 +38,8 @@ class Prototypical(Model):
         """
         super(Prototypical, self).__init__()
         self.w, self.h, self.c = w, h, c
+        self.W = tf.Variable(tf.random.truncated_normal([6272, 3136]),
+                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
         self.base_encoder = tf.keras.Sequential([
@@ -80,11 +82,8 @@ class Prototypical(Model):
         
         z_meta = self.encoder(cat)
         
-        W = tf.Variable(tf.random.truncated_normal([6272, 3136]),
-                      name="W")
-        
         z_att = tf.keras.layers.Attention()(
-            [z, tf.matmul(z_meta,W)]
+            [z, tf.matmul(z_meta,self.W)]
         )
         print(tf.matmul(z_meta,W[tf.newaxis,:,:]))
         print(z_meta)
