@@ -86,6 +86,7 @@ class Prototypical(Model):
         z_att = tf.keras.layers.Attention()(
             [z, tf.matmul(z_meta,W[tf.newaxis,:,:])]
         )
+        print(tf.matmul(z_meta,W[tf.newaxis,:,:]))
         z_fin = z_att
 
         # Divide embedding into support and query
