@@ -84,7 +84,7 @@ class Prototypical(Model):
                       name="W")
         
         z_att = tf.keras.layers.Attention()(
-            [z, tf.multiply(W[tf.newaxis,:,:],z_meta)]
+            [z, tf.multiply(z_meta,W[tf.newaxis,:,:])]
         )
         z_fin = z_att
 
