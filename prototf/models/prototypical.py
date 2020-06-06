@@ -84,7 +84,7 @@ class Prototypical(Model):
                       name="W")
         
         z_att = tf.keras.layers.Attention()(
-            [z, tf.matmul(z_meta,W[tf.newaxis,:,:])]
+            [z, tf.matmul(z_meta,W)]
         )
         print(tf.matmul(z_meta,W[tf.newaxis,:,:]))
         z_fin = z_att
