@@ -38,8 +38,6 @@ class Prototypical(Model):
         """
         super(Prototypical, self).__init__()
         self.w, self.h, self.c = w, h, c
-        self.W = tf.Variable(tf.random.truncated_normal([6272, 3136]),
-                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
         self.base_encoder = tf.keras.Sequential([
@@ -49,13 +47,6 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)),
 
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
-        )
-        
-        self.encoder = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
