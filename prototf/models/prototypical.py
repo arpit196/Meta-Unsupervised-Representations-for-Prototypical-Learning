@@ -107,7 +107,7 @@ class Prototypical(Model):
         Returns: None
 
         """
-        self.encoder.save(model_path)
+        self.base_encoder.save(model_path)
 
     def load(self, model_path):
         """
