@@ -84,8 +84,8 @@ class Prototypical(Model):
                       name="W")
         
         z_att = tf.keras.layers.Attention()(
-            [z, W*z_meta])
-        
+            [z, tf.multiply(W[tf.newaxis,:,:],z_meta)]
+        )
         z_fin = z_att
 
         # Divide embedding into support and query
