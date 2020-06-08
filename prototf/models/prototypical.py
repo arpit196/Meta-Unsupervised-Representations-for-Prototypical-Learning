@@ -107,7 +107,7 @@ class Prototypical(Model):
             [z_feat2, z_meta]
         )
 
-        z_fin = tf.concat([z,z_att1,z_att2],axis=0)
+        z_fin = tf.concat([z,z_att1,z_att2],axis=1)
 
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z_fin[:n_class * n_support],
