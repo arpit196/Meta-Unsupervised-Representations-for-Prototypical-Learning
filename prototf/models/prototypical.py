@@ -38,8 +38,24 @@ class Prototypical(Model):
         """
         super(Prototypical, self).__init__()
         self.w, self.h, self.c = w, h, c
+        self.W = tf.Variable(tf.random.truncated_normal([6272, 3136]),
+                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
+        self.meta_enc1 = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
+        )
+        
+        self.meta_enc2 = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
+        )
+        
         self.base_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
@@ -47,6 +63,13 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)),
 
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
+        )
+        
+        self.encoder = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
@@ -71,10 +94,20 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.base_encoder(cat)
         
-        #print(tf.matmul(z_meta,W[tf.newaxis,:,:]))
-        #print(z_meta)
-        #print(z)
-        z_fin = z
+        z_meta = self.encoder(cat)
+        
+        z_feat1 = self.meta_enc1(cat)
+        z_feat2 = self.meta_enc2(cat)
+        
+        z_att1 = tf.keras.layers.Attention()(
+            [z_feat1, z_meta]
+        )
+        
+        z_att2 = tf.keras.layers.Attention()(
+            [z_feat2, z_meta]
+        )
+
+        z_fin = tf.concat([z,z_att1,z_att2],axis=0)
 
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z_fin[:n_class * n_support],
@@ -107,7 +140,7 @@ class Prototypical(Model):
         Returns: None
 
         """
-        self.base_encoder.save(model_path)
+        self.encoder.save(model_path)
 
     def load(self, model_path):
         """
@@ -119,5 +152,5 @@ class Prototypical(Model):
         Returns: None
 
         """
-        self.base_encoder(tf.zeros([1, self.w, self.h, self.c]))
-        self.base_encoder.load_weights(model_path)
+        self.encoder(tf.zeros([1, self.w, self.h, self.c]))
+        self.encoder.load_weights(model_path)
