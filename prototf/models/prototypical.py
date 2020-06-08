@@ -111,7 +111,7 @@ class Prototypical(Model):
 
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z_fin[:n_class * n_support],
-                                  [n_class, n_support, z.shape[-1]])
+                                  [n_class, n_support, z_fin.shape[-1]])
         # Prototypes are means of n_support examples
         z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
         z_query = z_fin[n_class * n_support:]
