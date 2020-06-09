@@ -8,13 +8,10 @@ from tensorflow.keras.models import load_model
 def calc_euclidian_dists(x, y):
     """
     Calculate euclidian distance between two 3D tensors.
-
     Args:
         x (tf.Tensor):
         y (tf.Tensor):
-
     Returns (tf.Tensor): 2-dim tensor with distances.
-
     """
     n = x.shape[0]
     m = y.shape[0]
@@ -81,7 +78,19 @@ class Prototypical(Model):
         n_query = query.shape[1]
         y = np.tile(np.arange(n_class)[:, np.newaxis], (1, n_query))
         y_onehot = tf.cast(tf.one_hot(y, n_class), tf.float32)
-
+        
+        uns_loss = 0
+        for clss in range(n_class):
+          for img1 in range(n_support):
+            enc1 = self.base_encoder(support[clss][img1])
+            for img2 in range(n_support):
+              enc2 = self.base_encoder(support[clss][img2])
+              uns_loss = uns_loss + calc_euclidian_dists(enc1-enc2)**2
+            for img3 in range(n_support):
+              adv_cls = (clss+1)%n_clss
+              enc3 = self.base_encoder(support[clss][img3])
+              uns_loss = uns_loss - calc_euclidian_dists(enc1-enc3)**2
+        
         # correct indices of support samples (just natural order)
         target_inds = tf.reshape(tf.range(n_class), [n_class, 1])
         target_inds = tf.tile(target_inds, [1, n_query])
@@ -123,7 +132,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1]))
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + uns_loss
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
@@ -133,24 +142,18 @@ class Prototypical(Model):
     def save(self, model_path):
         """
         Save encoder to the file.
-
         Args:
             model_path (str): path to the .h5 file.
-
         Returns: None
-
         """
         self.encoder.save(model_path)
 
     def load(self, model_path):
         """
         Load encoder from the file.
-
         Args:
             model_path (str): path to the .h5 file.
-
         Returns: None
-
         """
         self.encoder(tf.zeros([1, self.w, self.h, self.c]))
         self.encoder.load_weights(model_path)
