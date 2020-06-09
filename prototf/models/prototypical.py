@@ -91,16 +91,16 @@ class Prototypical(Model):
             enc1 = tf.expand_dims(z1[clss, img1,:],axis=0)
             for img2 in range(n_support):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
-              uns_loss = uns_loss + calc_euclidian_dists(enc1,enc2)**2
+              uns_loss = uns_loss + (calc_euclidian_dists(enc1,enc2)**2)
               cnt+=1
             for img3 in range(n_support):
               adv_cls = (clss+1)%n_class
               enc3 = tf.expand_dims(z1[adv_cls, img3,:],axis=0)
-              uns_loss = uns_loss - calc_euclidian_dists(enc1,enc3)**2
+              uns_loss = uns_loss - (calc_euclidian_dists(enc1,enc3)**2)
               cnt+=1
         
-        uns_loss = uns_loss+0.5
         uns_loss = uns_loss/cnt
+        uns_loss = uns_loss+0.5
         
         z_meta = self.encoder(cat)
         
