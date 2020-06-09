@@ -82,13 +82,13 @@ class Prototypical(Model):
         uns_loss = 0
         for clss in range(n_class):
           for img1 in range(n_support):
-            enc1 = self.base_encoder(support[clss][img1])
+            enc1 = self.base_encoder(tf.expand_dims(support[clss][img1],axis=0))
             for img2 in range(n_support):
-              enc2 = self.base_encoder(support[clss][img2])
+              enc2 = self.base_encoder(tf.expand_dims(support[clss][img2],axis=0))
               uns_loss = uns_loss + calc_euclidian_dists(enc1-enc2)**2
             for img3 in range(n_support):
               adv_cls = (clss+1)%n_clss
-              enc3 = self.base_encoder(support[clss][img3])
+              enc3 = self.base_encoder(tf.expand_dims(support[clss][img3],axis=0))
               uns_loss = uns_loss - calc_euclidian_dists(enc1-enc3)**2
         
         # correct indices of support samples (just natural order)
