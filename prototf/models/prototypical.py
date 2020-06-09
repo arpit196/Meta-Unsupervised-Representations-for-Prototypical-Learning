@@ -101,10 +101,6 @@ class Prototypical(Model):
         z_att1 = tf.keras.layers.Attention()(
             [z_feat1, z_meta]
         )
-        
-        z_att2 = tf.keras.layers.Attention()(
-            [z_feat2, z_meta]
-        )
 
         z_fin = tf.concat([z,z_att1],axis=1)
 
