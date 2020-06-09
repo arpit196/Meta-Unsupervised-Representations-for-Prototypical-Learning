@@ -84,7 +84,7 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.base_encoder(cat)
         
-        z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z_fin.shape[-1]])
+        z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         for clss in range(n_class):
           for img1 in range(n_support):
             enc1 = z[clss][img1]
