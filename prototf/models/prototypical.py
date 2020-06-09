@@ -88,6 +88,8 @@ class Prototypical(Model):
         for clss in range(n_class):
           for img1 in range(n_support):
             enc1 = z[clss][img1]
+            print("enc1")
+            print(enc1)
             for img2 in range(n_support):
               enc2 = z[clss][img2]
               uns_loss = uns_loss + calc_euclidian_dists(enc1,enc2)**2
