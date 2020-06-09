@@ -1,1 +1,1 @@
-from .prototypical import Prototypical_unsup
+from .prototypical import Prototypical
