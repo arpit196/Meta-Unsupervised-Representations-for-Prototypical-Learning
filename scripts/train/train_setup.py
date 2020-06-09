@@ -39,7 +39,7 @@ def train(config):
     n_support = config['data.train_support']
     n_query = config['data.train_query']
     w, h, c = list(map(int, config['model.x_dim'].split(',')))
-    model = Prototypical_unsup(n_support, n_query, w, h, c)
+    model = Prototypical(n_support, n_query, w, h, c)
     optimizer = tf.keras.optimizers.Adam(config['train.lr'])
 
     # Metrics to gather
