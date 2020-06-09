@@ -71,16 +71,6 @@ class Prototypical(Model):
         y_onehot = tf.cast(tf.one_hot(y, n_class), tf.float32)
         
         uns_loss = 0
-        for clss in range(n_class):
-          for img1 in range(n_support):
-            enc1 = self.base_encoder(tf.expand_dims(support[clss][img1],axis=0))
-            for img2 in range(n_support):
-              enc2 = self.base_encoder(tf.expand_dims(support[clss][img2],axis=0))
-              uns_loss = uns_loss + calc_euclidian_dists(enc1,enc2)**2
-            for img3 in range(n_support):
-              adv_cls = (clss+1)%n_class
-              enc3 = self.base_encoder(tf.expand_dims(support[clss][img3],axis=0))
-              uns_loss = uns_loss - calc_euclidian_dists(enc1,enc3)**2
         
         # correct indices of support samples (just natural order)
         target_inds = tf.reshape(tf.range(n_class), [n_class, 1])
@@ -94,6 +84,18 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.base_encoder(cat)
         
+        z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z_fin.shape[-1]])
+        for clss in range(n_class):
+          for img1 in range(n_support):
+            enc1 = z[clss][img1]
+            for img2 in range(n_support):
+              enc2 = z[clss][img2]
+              uns_loss = uns_loss + calc_euclidian_dists(enc1,enc2)**2
+            for img3 in range(n_support):
+              adv_cls = (clss+1)%n_class
+              enc3 = z[clss][img3]
+              uns_loss = uns_loss - calc_euclidian_dists(enc1,enc3)**2
+            
         z_meta = self.encoder(cat)
         
         z_feat1 = self.meta_enc1(cat)
