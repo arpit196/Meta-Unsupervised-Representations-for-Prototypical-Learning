@@ -87,15 +87,15 @@ class Prototypical(Model):
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         for clss in range(n_class):
           for img1 in range(n_support):
-            enc1 = z[clss, img1,:]
+            enc1 = z1[clss, img1,:]
             print("enc1")
             print(enc1)
             for img2 in range(n_support):
-              enc2 = z[clss, img2,:]
+              enc2 = z1[clss, img2,:]
               uns_loss = uns_loss + calc_euclidian_dists(enc1,enc2)**2
             for img3 in range(n_support):
               adv_cls = (clss+1)%n_class
-              enc3 = z[clss, img3,:]
+              enc3 = z1[clss, img3,:]
               uns_loss = uns_loss - calc_euclidian_dists(enc1,enc3)**2
             
         z_meta = self.encoder(cat)
