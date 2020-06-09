@@ -80,15 +80,15 @@ class Prototypical(Model):
         y_onehot = tf.cast(tf.one_hot(y, n_class), tf.float32)
         
         uns_loss = 0
-        for class in range(n_class):
+        for clss in range(n_class):
           for img1 in range(n_support):
-            enc1 = self.base_encoder(support[class][img1])
+            enc1 = self.base_encoder(support[clss][img1])
             for img2 in range(n_support):
-              enc2 = self.base_encoder(support[class][img2])
+              enc2 = self.base_encoder(support[clss][img2])
               uns_loss = uns_loss + calc_euclidian_dists(enc1-enc2)**2
             for img3 in range(n_support):
-              adv_cls = (class+1)%n_class
-              enc3 = self.base_encoder(support[class][img3])
+              adv_cls = (clss+1)%n_clss
+              enc3 = self.base_encoder(support[clss][img3])
               uns_loss = uns_loss - calc_euclidian_dists(enc1-enc3)**2
         
         # correct indices of support samples (just natural order)
