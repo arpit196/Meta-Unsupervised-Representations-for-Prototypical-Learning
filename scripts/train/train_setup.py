@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 #tf.config.gpu.set_per_process_memory_growth(True)
 
-from prototf.models import Prototypical_unsup
+from prototf.models import Prototypical
 from prototf.data import load
 from prototf import TrainEngine
 
