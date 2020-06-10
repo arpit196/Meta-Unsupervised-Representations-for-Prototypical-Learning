@@ -92,21 +92,21 @@ class Prototypical(Model):
             enc1 = tf.expand_dims(z1[clss, img1,:],axis=0)
             for img2 in range(n_support):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
-              uns_loss = uns_loss + (calc_euclidian_dists(enc1,enc2)**2)
+              tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc2)**2)
               cnt+=1
-              if(cnt>16):
+              if(cnt>8):
                 break
                     
             for img3 in range(n_support):
               adv_cls = (clss+1)%n_class
               enc3 = tf.expand_dims(z1[adv_cls, img3,:],axis=0)
-              uns_loss = uns_loss - (calc_euclidian_dists(enc1,enc3)**2)
+              tot_loss = tot_loss - (calc_euclidian_dists(enc1,enc3)**2)
               cnt+=1
-              if(cnt>32):
+              if(cnt>16):
                 break
-                
-            uns_loss = uns_loss/cnt
-            uns_loss = uns_loss+0.5
+            
+            uns_loss = uns_loss + tot_loss/(cnt*1.0)
+            uns_loss = uns_loss + 0.5
         
         z_meta = self.encoder(cat)
         
@@ -132,7 +132,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + uns_loss
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) - uns_loss
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
