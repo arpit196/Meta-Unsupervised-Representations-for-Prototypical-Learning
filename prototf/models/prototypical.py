@@ -90,6 +90,7 @@ class Prototypical(Model):
           for img1 in range(n_support):
             cnt=0
             enc1 = tf.expand_dims(z1[clss, img1,:],axis=0)
+            tot_loss = 0
             for img2 in range(n_support):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
               tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc2)**2)
