@@ -47,7 +47,7 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )'''
         
-        self.base_encoder = tf.keras.Sequential([
+        self.encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
@@ -87,7 +87,7 @@ class Prototypical(Model):
                                  self.w, self.h, self.c]),
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
-        z = self.base_encoder(cat)
+        z = self.encoder(cat)
         
         '''
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
