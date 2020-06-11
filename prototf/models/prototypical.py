@@ -101,7 +101,7 @@ class Prototypical(Model):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
               tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc2)**2)
               cnt+=1
-              if(cnt>4):
+              if(cnt>32):
                 break
                     
             for img3 in range(n_support):
@@ -109,7 +109,7 @@ class Prototypical(Model):
               enc3 = tf.expand_dims(z1[adv_cls, img3,:],axis=0)
               tot_loss = tot_loss - (calc_euclidian_dists(enc1,enc3)**2)
               cnt+=1
-              if(cnt>8):
+              if(cnt>64):
                 break
             
         
