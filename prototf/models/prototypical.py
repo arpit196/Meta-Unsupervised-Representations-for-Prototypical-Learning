@@ -35,6 +35,8 @@ class Prototypical(Model):
         """
         super(Prototypical, self).__init__()
         self.w, self.h, self.c = w, h, c
+        self.W = tf.Variable(tf.random.truncated_normal([3136]),
+                             name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
         self.meta_enc1 = tf.keras.Sequential([
@@ -84,6 +86,7 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.base_encoder(cat)
         
+        '''
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
         for clss in range(n_class):
@@ -106,23 +109,30 @@ class Prototypical(Model):
               if(cnt>8):
                 break
             
+        
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
+        '''
         
-        z_meta = self.encoder(cat)
+        #z_meta = self.encoder(cat)
         
-        z_feat1 = self.meta_enc1(cat)
+        #z_feat1 = self.meta_enc1(cat)
         
+        '''
         z_att1 = tf.keras.layers.Attention()(
             [z_feat1, z_meta]
         )
-
-        z_fin = tf.concat([z,z_att1],axis=1)
+        '''
+        
+        #z_fin = tf.concat([z],axis=1)
+        z_fin=z
 
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z_fin[:n_class * n_support],
                                   [n_class, n_support, z_fin.shape[-1]])
+        print(z_fin.shape)
         # Prototypes are means of n_support examples
+        z_prototypes = tf.multiply(z_prototypes,W)
         z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
         z_query = z_fin[n_class * n_support:]
 
