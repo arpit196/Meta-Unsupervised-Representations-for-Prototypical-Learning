@@ -89,7 +89,7 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.encoder(cat)
         
-        '''
+        
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
         for clss in range(n_class):
@@ -115,7 +115,7 @@ class Prototypical(Model):
         
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
-        '''
+        
         
         #z_meta = self.encoder(cat)
         
@@ -146,7 +146,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) #+ uns_loss
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + tf.norm(self.W1, ord=1)#+ uns_loss 
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
