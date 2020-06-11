@@ -132,7 +132,7 @@ class Prototypical(Model):
                                   [n_class, n_support, z_fin.shape[-1]])
         print(z_fin.shape)
         # Prototypes are means of n_support examples
-        z_prototypes = tf.multiply(z_prototypes,W)
+        z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
         z_query = z_fin[n_class * n_support:]
 
