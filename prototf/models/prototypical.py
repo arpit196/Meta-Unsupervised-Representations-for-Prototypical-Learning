@@ -98,17 +98,22 @@ class Prototypical(Model):
             enc1 = tf.expand_dims(z1[clss, img1,:],axis=0)
             tot_loss = 0
             enc_aug = tf.expand_dims(self.encoder(tf.expand_dims(tf.image.flip_left_right(support[clss][img1]),axis=0)), axis=0)
+            cnt+=1
             tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc_aug)**2)
             for img2 in range(n_support):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
               tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc2)**2)
               cnt+=1
+              if(cnt>8):
+                break
                     
             for img3 in range(n_support):
               adv_cls = (clss+1)%n_class
               enc3 = tf.expand_dims(z1[adv_cls, img3,:],axis=0)
               tot_loss = tot_loss - (calc_euclidian_dists(enc1,enc3)**2)
               cnt+=1
+              if(cnt>16):
+                break
                 
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
