@@ -97,7 +97,7 @@ class Prototypical(Model):
             cnt=0
             enc1 = tf.expand_dims(z1[clss, img1,:],axis=0)
             tot_loss = 0
-            enc_aug = tf.expand_dims(self.encoder(tf.image.flip_left_right(support[clss][img1])))
+            enc_aug = tf.expand_dims(self.encoder(tf.image.flip_left_right(support[clss][img1])), axis=0)
             tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc2)**2)
             for img2 in range(n_support):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
