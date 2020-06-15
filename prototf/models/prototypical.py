@@ -59,14 +59,15 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )
         
+        '''
         self.meta_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
+        '''    
         
-
     def call(self, support, query):
         n_class = support.shape[0]
         n_support = support.shape[1]
