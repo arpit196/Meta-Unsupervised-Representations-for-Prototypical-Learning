@@ -83,23 +83,6 @@ class Prototypical(Model):
         self.encoder.add(l14)
         self.encoder.add(l15)
         
-        self.encoder = tf.keras.Sequential()
-        self.encoder.add(l1)
-        self.encoder.add(l2)
-        self.encoder.add(l3)
-        self.encoder.add(l4)
-        self.encoder.add(l5)
-        self.encoder.add(l6)
-        self.encoder.add(l7)
-        self.encoder.add(l8)
-        self.encoder.add(l9)
-        self.encoder.add(l10)
-        self.encoder.add(l11)
-        self.encoder.add(l12)
-        self.encoder.add(l13)
-        self.encoder.add(l14)
-        self.encoder.add(l15)
-        
         self.pro_encoder = tf.keras.Sequential()
         self.pro_encoder.add(self.W[0]*l1)
         self.pro_encoder.add(self.W[1]*l2)
@@ -147,7 +130,7 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.encoder(cat)
         
-        '''
+        
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
         for clss in range(n_class):
@@ -176,7 +159,7 @@ class Prototypical(Model):
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
         
-        '''
+        
         #z_meta = self.encoder(cat)
         
         #z_feat1 = self.meta_enc1(cat)
@@ -216,7 +199,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) - uns_loss 
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + uns_loss 
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
