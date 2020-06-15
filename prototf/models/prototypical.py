@@ -59,14 +59,13 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )
         
-        '''
-        self.encoder = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
+        self.meta_encoder = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
+            tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
-        '''
+        
 
     def call(self, support, query):
         n_class = support.shape[0]
@@ -89,7 +88,7 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         z = self.encoder(cat)
         
-        
+        '''
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
         for clss in range(n_class):
@@ -118,7 +117,7 @@ class Prototypical(Model):
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
         
-        
+        '''
         #z_meta = self.encoder(cat)
         
         #z_feat1 = self.meta_enc1(cat)
@@ -130,11 +129,17 @@ class Prototypical(Model):
         '''
         
         #z_fin = tf.concat([z],axis=1)
-        z_fin=z
 
         # Divide embedding into support and query
-        z_prototypes = tf.reshape(z_fin[:n_class * n_support],
+        z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z_fin.shape[-1]])
+        
+        #W_prototypes = self.meta_encoder(z)
+        cnt=0
+        for layer in self.encoder:
+            z_prototypes = 10*layer(z_prototypes)
+            cnt+=1
+       
         print(z_fin.shape)
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
