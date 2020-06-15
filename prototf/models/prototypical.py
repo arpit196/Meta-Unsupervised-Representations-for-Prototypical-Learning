@@ -49,20 +49,20 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )'''
         
-        l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l3=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l4=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l5=    tf.keras.layers.BatchNormalization(),
-        l6=    tf.keras.layers.ReLU(),
-        l7=    tf.keras.layers.MaxPool2D((2, 2)),
+        l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l3=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l4=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l5=    tf.keras.layers.BatchNormalization()
+        l6=    tf.keras.layers.ReLU()
+        l7=    tf.keras.layers.MaxPool2D((2, 2))
 
-        l8=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l9=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l10=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l11=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-        l12=    tf.keras.layers.BatchNormalization(),
-        l13=    tf.keras.layers.ReLU(),
+        l8=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l9=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l10=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l11=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        l12=    tf.keras.layers.BatchNormalization()
+        l13=    tf.keras.layers.ReLU()
         l14=    tf.keras.layers.MaxPool2D((2, 2))
         l15 =  Flatten()
         
