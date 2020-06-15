@@ -140,11 +140,10 @@ class Prototypical(Model):
             z_prototypes = 10*layer(z_prototypes)
             cnt+=1
        
-        print(z_fin.shape)
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
-        z_query = z_fin[n_class * n_support:]
+        z_query = z[n_class * n_support:]
 
         # Calculate distances between query and prototypes
         dists = calc_euclidian_dists(z_query, z_prototypes)
