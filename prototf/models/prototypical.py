@@ -132,7 +132,7 @@ class Prototypical(Model):
 
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
-                                  [n_class, n_support, z_fin.shape[-1]])
+                                  [n_class, n_support, z.shape[-1]])
         
         #W_prototypes = self.meta_encoder(z)
         cnt=0
