@@ -130,16 +130,18 @@ class Prototypical(Model):
         
         #z_fin = tf.concat([z],axis=1)
 
-        # Divide embedding into support and query
-        z_prototypes = tf.reshape(z[:n_class * n_support],
-                                  [n_class, n_support, z.shape[-1]])
         
         #W_prototypes = self.meta_encoder(z)
         cnt=0
         for layer in self.encoder.layers:
-            z_prototypes = 10*layer(z_prototypes)
+            cat = 10*layer(cat)
             cnt+=1
        
+        z=cat
+        # Divide embedding into support and query
+        z_prototypes = tf.reshape(z[:n_class * n_support],
+                                  [n_class, n_support, z.shape[-1]])
+        
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
