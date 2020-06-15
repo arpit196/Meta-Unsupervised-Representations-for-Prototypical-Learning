@@ -37,6 +37,8 @@ class Prototypical(Model):
         self.w, self.h, self.c = w, h, c
         #self.W = tf.Variable(tf.random.truncated_normal([3136]),
         #                     name="W")
+        self.W = tf.Variable(tf.random.truncated_normal([19]),
+                              name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
         '''
@@ -48,12 +50,18 @@ class Prototypical(Model):
         )'''
         
         self.encoder = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)),
 
-            tf.keras.layers.Conv2D(filters=64, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
@@ -134,15 +142,16 @@ class Prototypical(Model):
         
         #W_prototypes = self.meta_encoder(z)
         cnt=0
-        for layer in self.encoder.layers:
+        for ind,layer in enumerate(self.encoder.layers):
             print(layer)
-            cat = 10*layer(cat)
+            cat = self.W[ind]*layer(cat)
             cnt+=1
        
         z=cat
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
+        
         
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
