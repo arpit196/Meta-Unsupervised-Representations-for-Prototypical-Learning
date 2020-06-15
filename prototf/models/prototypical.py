@@ -49,23 +49,73 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )'''
         
-        self.encoder = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D((2, 2)),
+        l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l3=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l4=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l5=    tf.keras.layers.BatchNormalization(),
+        l6=    tf.keras.layers.ReLU(),
+        l7=    tf.keras.layers.MaxPool2D((2, 2)),
 
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
-        )
+        l8=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l9=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l10=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l11=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        l12=    tf.keras.layers.BatchNormalization(),
+        l13=    tf.keras.layers.ReLU(),
+        l14=    tf.keras.layers.MaxPool2D((2, 2))
+        l15 =  Flatten()
+        
+        self.encoder = tf.keras.Sequential()
+        self.encoder.add(l1)
+        self.encoder.add(l2)
+        self.encoder.add(l3)
+        self.encoder.add(l4)
+        self.encoder.add(l5)
+        self.encoder.add(l6)
+        self.encoder.add(l7)
+        self.encoder.add(l8)
+        self.encoder.add(l9)
+        self.encoder.add(l10)
+        self.encoder.add(l11)
+        self.encoder.add(l12)
+        self.encoder.add(l13)
+        self.encoder.add(l14)
+        self.encoder.add(l15)
+        
+        self.encoder = tf.keras.Sequential()
+        self.encoder.add(l1)
+        self.encoder.add(l2)
+        self.encoder.add(l3)
+        self.encoder.add(l4)
+        self.encoder.add(l5)
+        self.encoder.add(l6)
+        self.encoder.add(l7)
+        self.encoder.add(l8)
+        self.encoder.add(l9)
+        self.encoder.add(l10)
+        self.encoder.add(l11)
+        self.encoder.add(l12)
+        self.encoder.add(l13)
+        self.encoder.add(l14)
+        self.encoder.add(l15)
+        
+        self.pro_encoder = tf.keras.Sequential()
+        self.pro_encoder.add(self.W[0]*l1)
+        self.pro_encoder.add(self.W[1]*l2)
+        self.pro_encoder.add(self.W[2]*l3)
+        self.pro_encoder.add(self.W[3]*l4)
+        self.pro_encoder.add(self.W[4]*l5)
+        self.pro_encoder.add(self.W[5]*l6)
+        self.pro_encoder.add(self.W[6]*l7)
+        self.pro_encoder.add(self.W[7]*l8)
+        self.pro_encoder.add(self.W[8]*l9)
+        self.pro_encoder.add(self.W[9]*l10)
+        self.pro_encoder.add(self.W[10]*l11)
+        self.pro_encoder.add(self.W[11]*l12)
+        self.pro_encoder.add(self.W[12]*l13)
+        self.pro_encoder.add(self.W[13]*l14)
+        self.pro_encoder.add(self.W[14]*l15)
         
         '''
         self.meta_encoder = tf.keras.Sequential([
@@ -141,13 +191,14 @@ class Prototypical(Model):
 
         
         #W_prototypes = self.meta_encoder(z)
-        cnt=0
+        
+        '''
         for ind,layer in enumerate(self.encoder.layers):
             print(layer)
             cat = self.W[ind]*layer(cat)
             cnt+=1
-       
-        z=cat
+        '''
+        z = self.pro_encoder(cat)
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
