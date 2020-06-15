@@ -136,7 +136,7 @@ class Prototypical(Model):
         
         #W_prototypes = self.meta_encoder(z)
         cnt=0
-        for layer in self.encoder:
+        for layer in self.encoder.layers:
             z_prototypes = 10*layer(z_prototypes)
             cnt+=1
        
