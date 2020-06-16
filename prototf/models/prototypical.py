@@ -108,7 +108,7 @@ class Prototypical(Model):
         pro_encoder = tf.keras.layers.multiply([self.W[11],l12])(pro_encoder)
         pro_encoder = tf.keras.layers.multiply([self.W[12],l13])(pro_encoder)
         pro_encoder = tf.keras.layers.multiply([self.W[13],l14])(pro_encoder)
-        output = tf.keras.layers.multiply([self.W[14],l15]))(pro_encoder)
+        output = tf.keras.layers.multiply([self.W[14],l15])(pro_encoder)
         return Model(inputs,output)
     
     def call(self, support, query):
