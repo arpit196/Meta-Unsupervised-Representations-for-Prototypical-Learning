@@ -92,7 +92,8 @@ class Prototypical(Model):
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
-        '''    
+        '''
+    '''
     def proto_enc(self, inputs):
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[0]),self.l1])(inputs)
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[1]),self.l2])(pro_encoder)
@@ -109,6 +110,25 @@ class Prototypical(Model):
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[12]),self.l13])(pro_encoder)
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[13]),self.l14])(pro_encoder)
         output = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[14]),self.l15])(pro_encoder)
+        return Model(inputs,output)
+    '''
+    
+    def proto_enc(self, inputs):
+        pro_encoder = self.W[0]*self.l1(inputs)
+        pro_encoder = self.W[1]*self.l2(pro_encoder)
+        pro_encoder = self.W[2]*self.l3(pro_encoder)
+        pro_encoder = self.W[3]*self.l4(pro_encoder)
+        pro_encoder = self.W[4]*self.l5(pro_encoder)
+        pro_encoder = self.W[6]*self.l6(pro_encoder)
+        pro_encoder = self.W[2]*self.l7(pro_encoder)
+        pro_encoder = self.W[7]*self.l8(pro_encoder)
+        pro_encoder = self.W[8]*self.l9](pro_encoder)
+        pro_encoder = self.W[2]*self.l3(pro_encoder)(pro_encoder)
+        pro_encoder = self.W[10]*self.l11(pro_encoder)
+        pro_encoder = self.W[11]*self.l12(pro_encoder)
+        pro_encoder = self.W[12]*self.l13(pro_encoder)
+        pro_encoder = self.W[13]*self.l14(pro_encoder)
+        output = self.W[14]*self.l15(pro_encoder)
         return Model(inputs,output)
         
         
