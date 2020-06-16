@@ -83,22 +83,7 @@ class Prototypical(Model):
         self.encoder.add(l14)
         self.encoder.add(l15)
         
-        self.pro_encoder = tf.keras.Sequential()
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[0],l1]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[1],l2]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[2],l3]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[3],l4]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[4],l5]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[5],l6]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[6],l7]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[7],l8]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[8],l9]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[9],l10]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[10],l11]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[11],l12]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[12],l13]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[13],l14]))
-        self.pro_encoder.add(tf.keras.layers.multiply([self.W[14],l15]))
+        #self.pro_encoder = tf.keras.Sequential()
         
         '''
         self.meta_encoder = tf.keras.Sequential([
@@ -108,7 +93,24 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
         '''    
-        
+    def proto_enc(inputs):
+        pro_encoder = tf.keras.layers.multiply([self.W[0],l1]))(inputs)
+        pro_encoder = tf.keras.layers.multiply([self.W[1],l2]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[2],l3]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[3],l4]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[4],l5]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[5],l6]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[6],l7]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[7],l8]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[8],l9]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[9],l10]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[10],l11]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[11],l12]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[12],l13]))(pro_encoder)
+        pro_encoder = tf.keras.layers.multiply([self.W[13],l14]))(pro_encoder)
+        output = tf.keras.layers.multiply([self.W[14],l15]))(pro_encoder)
+        return Model(inputs,output)
+    
     def call(self, support, query):
         n_class = support.shape[0]
         n_support = support.shape[1]
@@ -181,7 +183,7 @@ class Prototypical(Model):
             cat = self.W[ind]*layer(cat)
             cnt+=1
         '''
-        z = self.pro_encoder(cat)
+        z = proto_enc(cat)
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
