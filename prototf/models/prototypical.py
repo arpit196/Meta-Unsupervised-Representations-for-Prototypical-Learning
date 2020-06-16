@@ -110,7 +110,8 @@ class Prototypical(Model):
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[13]),self.l14])(pro_encoder)
         output = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[14]),self.l15])(pro_encoder)
         return Model(inputs,output)
-    
+        
+        
     def call(self, support, query):
         n_class = support.shape[0]
         n_support = support.shape[1]
