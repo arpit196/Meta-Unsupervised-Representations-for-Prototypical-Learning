@@ -94,7 +94,7 @@ class Prototypical(Model):
         )
         '''    
     def proto_enc(self, inputs):
-        pro_encoder = tf.keras.layers.multiply([tf.convet_to_tensor(self.W[0]),self.l1])(inputs)
+        pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[0]),self.l1])(inputs)
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[1]),self.l2])(pro_encoder)
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[2]),self.l3])(pro_encoder)
         pro_encoder = tf.keras.layers.multiply([tf.convert_to_tensor(self.W[3]),self.l3])(pro_encoder)
