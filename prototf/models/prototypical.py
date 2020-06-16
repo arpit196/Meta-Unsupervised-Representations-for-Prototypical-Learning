@@ -93,7 +93,7 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
         '''    
-    def proto_enc(inputs):
+    def proto_enc(self, inputs):
         pro_encoder = tf.keras.layers.multiply([self.W[0],l1])(inputs)
         pro_encoder = tf.keras.layers.multiply([self.W[1],l2])(pro_encoder)
         pro_encoder = tf.keras.layers.multiply([self.W[2],l3])(pro_encoder)
@@ -183,7 +183,7 @@ class Prototypical(Model):
             cat = self.W[ind]*layer(cat)
             cnt+=1
         '''
-        z = proto_enc(cat)
+        z = self.proto_enc(cat)
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
