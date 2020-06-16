@@ -1,5 +1,5 @@
-# Prototypical Networks for Few-shot in TensorFlow 2.0
-Implementation of Prototypical Networks for Few-shot Learning paper (https://arxiv.org/abs/1703.05175) in TensorFlow 2.0. Model has been tested on Omniglot and miniImagenet datasets with the same splitting as in the paper.
+# Meta Learning Unsupervised Representations for Attention based Prototypical Networks in TensorFlow 2.0
+Implementation of Meta Unsupervised Learning for Attention based Prototypical Networks  in TensorFlow 2.0. Model still under test. Project under construction.
 
 <img width="896" alt="Screenshot 2019-04-02 at 9 53 06 AM" src="https://user-images.githubusercontent.com/23639048/55438102-5d9e4c00-55a9-11e9-86e2-b4f79f880b83.png">
 
@@ -32,17 +32,7 @@ The repository organized as follows. `data` directory contains scripts for datas
 
 ### Results
 
-Omniglot:
-
-| Evnironment                 | 5-way-5-shot     | 5-way-1-shot     | 20-way-5-shot    | 20-way-1shot     |
-|-----------------------------|------------------|------------------|------------------|------------------|
-| Accuracy                    | 99.4%            | 97.4%            | 98.4%            | 92.2%            |
-
-miniImagenet
-
-| Evnironment                 | 5-way-5-shot     | 5-way-1-shot     | 
-|-----------------------------|------------------|------------------|
-| Accuracy                    | 66.0%            | 43.5%            |
+Yet to be obtained
 
 Additional settings can be found in `results` folder in the root of repository. 
 
