@@ -125,7 +125,7 @@ class Prototypical(Model):
         #pro_encoder = tf.keras.layers.multiply([self.W[13],pro_encoder])
         output = self.W[14]*self.l15(pro_encoder)
         #output = tf.keras.layers.multiply([self.W[14],pro_encoder])
-        return Model(inputs,output) 
+        return output
         
     def call(self, support, query):
         n_class = support.shape[0]
