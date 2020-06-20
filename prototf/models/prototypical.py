@@ -71,7 +71,7 @@ class Prototypical(Model):
 ], name='Multi-CNNs')
         self.l12=    keras.layers.BatchNormalization()
         self.l13=    keras.layers.ReLU()
-        self.l14=    keras.layers.MaxPool2D((2, 2))
+        self.l14=    keras.layers.MaxPool3D((2, 2, 2))
         self.l15 =  Flatten()
         
         self.encoder = keras.models.Sequential()
