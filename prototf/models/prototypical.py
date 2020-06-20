@@ -23,7 +23,8 @@ def calc_euclidian_dists(x, y):
 class SelfAttention(keras.layers.Layer):
     def __init__(self, units=32, input_dim=32):
         super(SelfAttention, self).__init__()
-        self.gamma = tf.get_variable("gamma", [1], initializer=tf.constant_initializer(0.0))
+        self.gamma = tf.Variable(tf.random.truncated_normal([1]),
+                             name="gamma")
     
     def hw_flatten(x) :
         return tf.reshape(x, shape=[x.shape[0], -1, x.shape[-1]])
