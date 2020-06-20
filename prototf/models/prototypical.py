@@ -1,7 +1,9 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
+from keras.layers import Flatten, Dense, Conv2D
 from tensorflow.keras import Model
+import keras
 from tensorflow.keras.models import load_model
 from keras_multi_head import MultiHead
 
@@ -49,15 +51,15 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )'''
         
-        self.l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l3=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l4=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l5=    tf.keras.layers.BatchNormalization()
-        self.l6=    tf.keras.layers.ReLU()
-        self.l7=    tf.keras.layers.MaxPool2D((2, 2))
+        self.l1 = keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l2 = keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l3=  keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l4=    keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l5=    keras.layers.BatchNormalization()
+        self.l6=    keras.layers.ReLU()
+        self.l7=    keras.layers.MaxPool2D((2, 2))
 
-        self.l8=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l8=    keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         
         '''
         self.l9=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
@@ -67,12 +69,12 @@ class Prototypical(Model):
         
         self.l11= MultiHead([tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
 ], name='Multi-CNNs')
-        self.l12=    tf.keras.layers.BatchNormalization()
-        self.l13=    tf.keras.layers.ReLU()
-        self.l14=    tf.keras.layers.MaxPool2D((2, 2))
+        self.l12=    keras.layers.BatchNormalization()
+        self.l13=    keras.layers.ReLU()
+        self.l14=    keras.layers.MaxPool2D((2, 2))
         self.l15 =  Flatten()
         
-        self.encoder = tf.keras.Sequential()
+        self.encoder = keras.models.Sequential()
         self.encoder.add(self.l1)
         self.encoder.add(self.l2)
         self.encoder.add(self.l3)
