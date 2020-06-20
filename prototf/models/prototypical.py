@@ -20,14 +20,15 @@ def calc_euclidian_dists(x, y):
     y = tf.tile(tf.expand_dims(y, 0), [n, 1, 1])
     return tf.reduce_mean(tf.math.pow(x - y, 2), 2)
 
+def hw_flatten(x) :
+    return tf.reshape(x, shape=[x.shape[0], -1, x.shape[-1]])
+
 class SelfAttention(tf.keras.layers.Layer):
     def __init__(self, units=32, input_dim=32):
         super(SelfAttention, self).__init__()
         self.gamma = tf.Variable(tf.random.truncated_normal([1]),
                              name="gamma")
     
-    def hw_flatten(x) :
-        return tf.reshape(x, shape=[x.shape[0], -1, x.shape[-1]])
     
     def call(self, inputs):
         f = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
