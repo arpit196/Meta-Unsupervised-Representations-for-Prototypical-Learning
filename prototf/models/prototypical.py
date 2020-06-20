@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
 from tensorflow.keras import Model
 from tensorflow.keras.models import load_model
-
+from keras_multi_head import MultiHead
 
 def calc_euclidian_dists(x, y):
     """
@@ -58,9 +58,15 @@ class Prototypical(Model):
         self.l7=    tf.keras.layers.MaxPool2D((2, 2))
 
         self.l8=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        
+        '''
         self.l9=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l10=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l11=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        '''
+        
+        self.l11= MultiHead([keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+], name='Multi-CNNs')
         self.l12=    tf.keras.layers.BatchNormalization()
         self.l13=    tf.keras.layers.ReLU()
         self.l14=    tf.keras.layers.MaxPool2D((2, 2))
@@ -75,8 +81,12 @@ class Prototypical(Model):
         self.encoder.add(self.l6)
         self.encoder.add(self.l7)
         self.encoder.add(self.l8)
+        
+        '''
         self.encoder.add(self.l9)
         self.encoder.add(self.l10)
+        '''
+        
         self.encoder.add(self.l11)
         self.encoder.add(self.l12)
         self.encoder.add(self.l13)
@@ -93,7 +103,7 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
         '''
-        
+    '''    
     def proto_enc(self, inputs):
         pro_encoder = self.W[0]*self.l1(inputs)
         #pro_encoder = tf.keras.layers.multiply([self.W[0],pro_encoder])
@@ -126,7 +136,8 @@ class Prototypical(Model):
         output = self.W[14]*self.l15(pro_encoder)
         #output = tf.keras.layers.multiply([self.W[14],pro_encoder])
         return output
-        
+    '''
+    
     def call(self, support, query):
         n_class = support.shape[0]
         n_support = support.shape[1]
