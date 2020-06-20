@@ -110,7 +110,6 @@ class Prototypical(Model):
         self.encoder.add(self.l12)
         self.encoder.add(self.l13)
         self.encoder.add(self.l14)
-        self.encoder.add(self.l15)
         
         #self.pro_encoder = tf.keras.Sequential()
         
