@@ -94,7 +94,7 @@ class Prototypical(Model):
         self.l13=    tf.keras.layers.MaxPool2D((2, 2))
         self.l14 =  Flatten()
         
-        self.encoder = keras.models.Sequential()
+        self.encoder = tf.keras.Sequential()
         self.encoder.add(self.l1)
         self.encoder.add(self.l2)
         self.encoder.add(self.l3)
