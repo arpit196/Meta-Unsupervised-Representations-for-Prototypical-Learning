@@ -31,9 +31,9 @@ class SelfAttention(tf.keras.layers.Layer):
     
     
     def call(self, inputs):
-        f = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
-        g = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
-        h = Conv2D(filters=8, kernel_size=3, padding='same')(inputs) # [bs, h, w, c]
+        f = Conv2D(filters=4, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
+        g = Conv2D(filters=4, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
+        h = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c]
 
             # N = h * w
         s = tf.matmul(hw_flatten(g), hw_flatten(f), transpose_b=True) # # [bs, N, N]
