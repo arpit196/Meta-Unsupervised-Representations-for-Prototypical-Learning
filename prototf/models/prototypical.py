@@ -1,7 +1,6 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
-from keras.layers import Flatten, Dense, Conv2D
 from tensorflow.keras import Model
 import keras
 from tensorflow.keras.models import load_model
@@ -21,11 +20,37 @@ def calc_euclidian_dists(x, y):
     y = tf.tile(tf.expand_dims(y, 0), [n, 1, 1])
     return tf.reduce_mean(tf.math.pow(x - y, 2), 2)
 
+class SelfAttention(keras.layers.Layer):
+    def __init__(self, units=32, input_dim=32):
+        super(SelfAttention, self).__init__()
+        self.gamma = tf.get_variable("gamma", [1], initializer=tf.constant_initializer(0.0))
+    
+    def hw_flatten(x) :
+        return tf.reshape(x, shape=[x.shape[0], -1, x.shape[-1]])
+    
+    def call(self, inputs):
+        f = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
+        g = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c']
+        h = Conv2D(filters=16, kernel_size=3, padding='same')(inputs) # [bs, h, w, c]
+
+            # N = h * w
+        s = tf.matmul(hw_flatten(g), hw_flatten(f), transpose_b=True) # # [bs, N, N]
+
+        beta = tf.nn.softmax(s)  # attention map
+
+        o = tf.matmul(beta, hw_flatten(h)) # [bs, N, C]
+        
+        o = tf.reshape(o, shape=x.shape) # [bs, h, w, C]
+        o = Conv2D(filters=16, kernel_size=3, padding='same')(o)
+        
+        x = self.gamma * o + x
+        return x
 
 class Prototypical(Model):
     """
     Implemenation of Prototypical Network.
     """
+    
     def __init__(self, n_support, n_query, w, h, c):
         """
         Args:
@@ -51,28 +76,22 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
         )'''
         
-        self.l1 = keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l2 = keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l3=  keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l4=    keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l5=    keras.layers.BatchNormalization()
-        self.l6=    keras.layers.ReLU()
-        self.l7=    keras.layers.MaxPool2D((2, 2))
+        self.l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l3=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l4=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l5=  tf.keras.layers.BatchNormalization()
+        self.l6=  tf.keras.layers.ReLU()
+        self.l7=  tf.keras.layers.MaxPool2D((2, 2))
 
-        self.l8=    keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l8=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l9=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l10 = SelfAttention()
         
-        '''
-        self.l9=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l10=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l11=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        '''
-        
-        self.l11= MultiHead([tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
-], name='Multi-CNNs')
-        self.l12=    keras.layers.BatchNormalization()
-        self.l13=    keras.layers.ReLU()
-        self.l14=    keras.layers.MaxPool3D((2, 2, 2))
-        self.l15 =  Flatten()
+        self.l11=    tf.keras.layers.BatchNormalization()
+        self.l12=    tf.keras.layers.ReLU()
+        self.l13=    tf.keras.layers.MaxPool2D((2, 2, 2))
+        self.l14 =  Flatten()
         
         self.encoder = keras.models.Sequential()
         self.encoder.add(self.l1)
@@ -83,11 +102,8 @@ class Prototypical(Model):
         self.encoder.add(self.l6)
         self.encoder.add(self.l7)
         self.encoder.add(self.l8)
-        
-        '''
         self.encoder.add(self.l9)
         self.encoder.add(self.l10)
-        '''
         
         self.encoder.add(self.l11)
         self.encoder.add(self.l12)
