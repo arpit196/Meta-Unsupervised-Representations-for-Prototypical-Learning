@@ -65,7 +65,7 @@ class Prototypical(Model):
         self.l11=    tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         '''
         
-        self.l11= MultiHead([keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
+        self.l11= MultiHead([tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'), tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
 ], name='Multi-CNNs')
         self.l12=    tf.keras.layers.BatchNormalization()
         self.l13=    tf.keras.layers.ReLU()
