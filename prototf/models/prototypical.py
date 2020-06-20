@@ -39,8 +39,8 @@ class Prototypical(Model):
         self.w, self.h, self.c = w, h, c
         #self.W = tf.Variable(tf.random.truncated_normal([3136]),
         #                     name="W")
-        self.W = tf.Variable(tf.random.truncated_normal([19]),
-                              name="W")
+        #self.W = tf.Variable(tf.random.truncated_normal([19]),
+        #                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
         '''
@@ -159,9 +159,10 @@ class Prototypical(Model):
                                  self.w, self.h, self.c]),
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
+        
+        
+        '''
         z = self.encoder(cat)
-        
-        
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
         for clss in range(n_class):
@@ -190,7 +191,7 @@ class Prototypical(Model):
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
         
-        
+        '''
         #z_meta = self.encoder(cat)
         
         #z_feat1 = self.meta_enc1(cat)
