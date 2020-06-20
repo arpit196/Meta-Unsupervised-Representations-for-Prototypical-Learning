@@ -20,7 +20,7 @@ def calc_euclidian_dists(x, y):
     y = tf.tile(tf.expand_dims(y, 0), [n, 1, 1])
     return tf.reduce_mean(tf.math.pow(x - y, 2), 2)
 
-class SelfAttention(keras.layers.Layer):
+class SelfAttention(tf.keras.layers.Layer):
     def __init__(self, units=32, input_dim=32):
         super(SelfAttention, self).__init__()
         self.gamma = tf.Variable(tf.random.truncated_normal([1]),
