@@ -50,6 +50,17 @@ class SelfAttention(tf.keras.layers.Layer):
         
         inputs = self.gamma * o + inputs
         return inputs
+    
+    def get_config(self):
+
+        config = super().get_config().copy()
+        config.update({
+            'f1': self.f1,
+            'g1': self.g1,
+            'h1': self.h1,
+            'o1': self.o1
+        })
+        return config
 
 class Prototypical(Model):
     """
