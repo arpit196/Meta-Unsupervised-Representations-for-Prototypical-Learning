@@ -28,12 +28,15 @@ class SelfAttention(tf.keras.layers.Layer):
         super(SelfAttention, self).__init__()
         self.gamma = tf.Variable(tf.random.truncated_normal([1]),
                              name="gamma")
-    
+        self.f1 = Conv2D(filters=4, kernel_size=3, padding='same',name='fir')
+        self.g1 = Conv2D(filters=4, kernel_size=3, padding='same',name='sec')
+        self.h1 = Conv2D(filters=16, kernel_size=3, padding='same',name='thir')
+        self.o1 = Conv2D(filters=16, kernel_size=3, padding='same',name='four')
     
     def call(self, inputs):
-        f = Conv2D(filters=4, kernel_size=3, padding='same',name='fir')(inputs) # [bs, h, w, c']
-        g = Conv2D(filters=4, kernel_size=3, padding='same',name='sec')(inputs) # [bs, h, w, c']
-        h = Conv2D(filters=16, kernel_size=3, padding='same',name='thir')(inputs) # [bs, h, w, c]
+        f = self.f1(inputs) # [bs, h, w, c']
+        g = self.g1(inputs) # [bs, h, w, c']
+        h = self.h1(inputs) # [bs, h, w, c]
 
             # N = h * w
         s = tf.matmul(hw_flatten(g), hw_flatten(f), transpose_b=True) # # [bs, N, N]
@@ -43,7 +46,7 @@ class SelfAttention(tf.keras.layers.Layer):
         o = tf.matmul(beta, hw_flatten(h)) # [bs, N, C]
         
         o = tf.reshape(o, shape=inputs.shape) # [bs, h, w, C]
-        o = Conv2D(filters=16, kernel_size=3, padding='same',name='four')(o)
+        o = self.o1(o)
         
         inputs = self.gamma * o + inputs
         return inputs
