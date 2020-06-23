@@ -192,7 +192,7 @@ class Prototypical(Model):
                                self.w, self.h, self.c])], axis=0)
         
         
-        '''
+        
         z = self.encoder(cat)
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
@@ -222,7 +222,7 @@ class Prototypical(Model):
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
         
-        '''
+        
         #z_meta = self.encoder(cat)
         
         #z_feat1 = self.meta_enc1(cat)
@@ -244,7 +244,7 @@ class Prototypical(Model):
             cat = self.W[ind]*layer(cat)
             cnt+=1
         '''
-        z = self.encoder(cat)
+        #z = self.encoder(cat)
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
