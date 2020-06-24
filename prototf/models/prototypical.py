@@ -194,6 +194,7 @@ class Prototypical(Model):
         
         
         z = self.encoder(cat)
+        '''
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
         for clss in range(n_class):
@@ -221,7 +222,7 @@ class Prototypical(Model):
                 
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
-        
+        '''
         
         #z_meta = self.encoder(cat)
         
