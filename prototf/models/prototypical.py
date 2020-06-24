@@ -252,7 +252,7 @@ class Prototypical(Model):
         
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
-        z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
+        z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
         z_query = z[n_class * n_support:]
 
         # Calculate distances between query and prototypes
