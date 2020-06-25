@@ -62,6 +62,7 @@ class SelfAttention(tf.keras.layers.Layer):
         })
         return config
 
+
 class Prototypical(Model):
     """
     Implemenation of Prototypical Network.
@@ -78,7 +79,7 @@ class Prototypical(Model):
         """
         super(Prototypical, self).__init__()
         self.w, self.h, self.c = w, h, c
-        #self.W = tf.Variable(tf.random.truncated_normal([3136]),
+        self.W = tf.Variable(tf.random.truncated_normal([3136]),
         #                     name="W")
         #self.W = tf.Variable(tf.random.truncated_normal([19]),
         #                      name="W")
@@ -127,6 +128,8 @@ class Prototypical(Model):
         self.encoder.add(self.l14)
         
         self.decoder = tf.keras.Sequential()
+        self.decoder.add(tf.keras.layers.Reshape())
+        self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
@@ -179,7 +182,10 @@ class Prototypical(Model):
         #output = tf.keras.layers.multiply([self.W[14],pro_encoder])
         return output
     '''
-    
+    def decoder(self,input, prototype):
+        combined = input + W*prototype
+        return self.decode(combined)
+                         
     def call(self, support, query):
         n_class = support.shape[0]
         n_support = support.shape[1]
@@ -203,6 +209,7 @@ class Prototypical(Model):
         
         
         z = self.encoder(cat)
+        print(z.shape)
         '''
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
@@ -264,7 +271,8 @@ class Prototypical(Model):
         #z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
         z1 = self.encoder(support[0][0])
-        z2 = generative(z1, z_prototypes[0])
+        #z2 = generative(z1, z_prototypes[0])
+        z2 = self.decoder(z1)
         uns_loss = uns_loss + tf.reduce_sum(z2-z1)
         z_query = z[n_class * n_support:]
 
