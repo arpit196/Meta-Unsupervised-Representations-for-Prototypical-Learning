@@ -126,6 +126,15 @@ class Prototypical(Model):
         self.encoder.add(self.l13)
         self.encoder.add(self.l14)
         
+        self.decoder = tf.keras.Sequential()
+        self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
+        self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        
         #self.pro_encoder = tf.keras.Sequential()
         
         '''
@@ -254,6 +263,9 @@ class Prototypical(Model):
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
+        z1 = self.encoder(support[0][0])
+        z2 = generative(z1, z_prototypes[0])
+        uns_loss = uns_loss + tf.reduce_sum(z2-z1)
         z_query = z[n_class * n_support:]
 
         # Calculate distances between query and prototypes
