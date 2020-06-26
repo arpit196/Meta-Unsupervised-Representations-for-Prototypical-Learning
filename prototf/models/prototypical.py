@@ -79,7 +79,7 @@ class Prototypical(Model):
         """
         super(Prototypical, self).__init__()
         self.w, self.h, self.c = w, h, c
-        self.W = tf.Variable(tf.random.truncated_normal([3136]),
+        #self.W = tf.Variable(tf.random.truncated_normal([3136]),
         #                     name="W")
         #self.W = tf.Variable(tf.random.truncated_normal([19]),
         #                      name="W")
@@ -148,43 +148,11 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
         '''
-    '''    
-    def proto_enc(self, inputs):
-        pro_encoder = self.W[0]*self.l1(inputs)
-        #pro_encoder = tf.keras.layers.multiply([self.W[0],pro_encoder])
-        pro_encoder = self.W[1]*self.l2(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[1],pro_encoder])
-        pro_encoder = self.W[2]*self.l3(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[2],pro_encoder])
-        pro_encoder = self.W[3]*self.l4(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[3],pro_encoder])
-        pro_encoder = self.W[4]*self.l5(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[4],pro_encoder])
-        pro_encoder = self.W[5]*self.l6(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[5],pro_encoder])
-        pro_encoder = self.W[6]*self.l7(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[6],pro_encoder])
-        pro_encoder = self.W[7]*self.l8(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[7],pro_encoder])
-        pro_encoder = self.W[8]*self.l9(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[8],pro_encoder])
-        pro_encoder = self.W[9]*self.l10(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[9],pro_encoder])
-        pro_encoder = self.W[10]*self.l11(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[10],pro_encoder])
-        pro_encoder = self.W[11]*self.l12(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[11],pro_encoder])
-        pro_encoder = self.W[12]*self.l13(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[12],pro_encoder])
-        pro_encoder = self.W[13]*self.l14(pro_encoder)
-        #pro_encoder = tf.keras.layers.multiply([self.W[13],pro_encoder])
-        output = self.W[14]*self.l15(pro_encoder)
-        #output = tf.keras.layers.multiply([self.W[14],pro_encoder])
-        return output
     '''
-    def decoder(self,input, prototype):
-        combined = input + W*prototype
-        return self.decode(combined)
+    def generator(self,input, prototype):
+        combined = input + self.W*prototype
+        return self.decoder(combined)
+    '''
                          
     def call(self, support, query):
         n_class = support.shape[0]
@@ -251,8 +219,6 @@ class Prototypical(Model):
         '''
         
         #z_fin = tf.concat([z],axis=1)
-
-        
         #W_prototypes = self.meta_encoder(z)
         
         '''
@@ -270,10 +236,10 @@ class Prototypical(Model):
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
-        z1 = self.encoder(support[0][0])
+        #z1 = self.encoder(support[0][0])
         #z2 = generative(z1, z_prototypes[0])
-        z2 = self.decoder(z1)
-        uns_loss = uns_loss + tf.reduce_sum(z2-z1)
+        #z2 = self.decoder(z1)
+        #uns_loss = uns_loss + tf.reduce_sum(z2-z1)
         z_query = z[n_class * n_support:]
 
         # Calculate distances between query and prototypes
