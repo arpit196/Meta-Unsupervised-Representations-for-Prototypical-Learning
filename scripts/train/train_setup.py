@@ -24,6 +24,7 @@ def train(config):
         os.makedirs(model_dir)
 
     data_dir = f"/content/drive/My Drive/{config['data.dataset']}"
+    print("Hi")
     ret = load(data_dir, config, ['train', 'val'])
     train_loader = ret['train']
     val_loader = ret['val']
