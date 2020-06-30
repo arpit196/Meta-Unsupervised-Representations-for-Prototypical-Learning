@@ -121,12 +121,16 @@ class Prototypical(Model):
         self.encoder.add(self.l8)
         self.encoder.add(self.l9)
         self.encoder.add(self.l10)
-        
         self.encoder.add(self.l11)
         self.encoder.add(self.l12)
         self.encoder.add(self.l13)
         self.encoder.add(self.l14)
         
+        self.uns_enc = tf.keras.Sequential()
+        self.uns_enc.add(self.l14)
+        self.uns_enc.add(tf.keras.layers.ReLU())
+        self.uns_enc.add(tf.keras.layers.Dense(50))
+        '''
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape(60,30,30))
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2)))
@@ -137,7 +141,7 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
-        
+        '''
         '''
         self.meta_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
@@ -146,10 +150,12 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
         '''
-
+    
+    '''
     def generator(self,input, prototype):
         combined = input + self.W*prototype
         return self.decoder(combined)
+    '''
                          
     def call(self, support, query):
         n_class = support.shape[0]
@@ -174,12 +180,13 @@ class Prototypical(Model):
         
         
         z = self.encoder(cat)
+        z_uns = self.uns_enc(z)
         print("zshape")
         print(z.shape)
         print("l13")
         print(self.l13)
-        '''
-        z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
+        
+        z1 = tf.reshape(z_uns[:n_class*n_support],[n_class, n_support, z_uns.shape[-1]])
         
         for clss in range(n_class):
           for img1 in range(n_support):
@@ -193,7 +200,7 @@ class Prototypical(Model):
               enc2 = tf.expand_dims(z1[clss, img2,:],axis=0)
               tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc2)**2)
               cnt+=1
-              if(cnt>8):
+              if(cnt>10):
                 break
                     
             for img3 in range(n_support):
@@ -201,12 +208,12 @@ class Prototypical(Model):
               enc3 = tf.expand_dims(z1[adv_cls, img3,:],axis=0)
               tot_loss = tot_loss - (calc_euclidian_dists(enc1,enc3)**2)
               cnt+=1
-              if(cnt>16):
+              if(cnt>20):
                 break
                 
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
-        '''
+        
         
         #z_meta = self.encoder(cat)
         
@@ -231,13 +238,10 @@ class Prototypical(Model):
         # Divide embedding into support and query
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
-        
-        
-        # Prototypes are means of n_support examples
-        #z_prototypes = tf.multiply(z_prototypes,self.W)
+
         z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
-        z1 = self.encoder(support[0][0])
-        z2 = generative(z1, z_prototypes[0])
+        #z1 = self.encoder(support[0][0])
+        #z2 = generative(z1, z_prototypes[0])
         #z2 = self.decoder(z1)
         #uns_loss = uns_loss + tf.reduce_sum(z2-z1)
         z_query = z[n_class * n_support:]
@@ -249,7 +253,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) - uns_loss 
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + uns_loss 
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
