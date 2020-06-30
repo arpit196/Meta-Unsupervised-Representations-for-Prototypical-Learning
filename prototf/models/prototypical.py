@@ -129,7 +129,7 @@ class Prototypical(Model):
         
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape())
-        self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
+        self.decoder.add(tf.keras.layers.UpSampling2D((2, 2)))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
@@ -174,7 +174,10 @@ class Prototypical(Model):
         
         
         z = self.encoder(cat)
+        print("zshape")
         print(z.shape)
+        print("l13")
+        print(self.l13)
         '''
         z1 = tf.reshape(z[:n_class*n_support],[n_class, n_support, z.shape[-1]])
         
