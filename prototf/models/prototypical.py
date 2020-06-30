@@ -132,7 +132,7 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2)))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
-        self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
+        self.decoder.add(tf.keras.layers.UpSampling2D((2, 2)))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
