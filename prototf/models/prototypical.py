@@ -127,7 +127,6 @@ class Prototypical(Model):
         self.encoder.add(self.l13)
         self.encoder.add(self.l14)
         
-        '''
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape())
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2))
@@ -138,7 +137,6 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
-        '''
         
         '''
         self.meta_encoder = tf.keras.Sequential([
@@ -148,11 +146,10 @@ class Prototypical(Model):
             tf.keras.layers.MaxPool2D((2, 2)), Flatten(), Dense(128)]
         )
         '''
-    '''
+
     def generator(self,input, prototype):
         combined = input + self.W*prototype
         return self.decoder(combined)
-    '''
                          
     def call(self, support, query):
         n_class = support.shape[0]
@@ -236,8 +233,8 @@ class Prototypical(Model):
         # Prototypes are means of n_support examples
         #z_prototypes = tf.multiply(z_prototypes,self.W)
         z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
-        #z1 = self.encoder(support[0][0])
-        #z2 = generative(z1, z_prototypes[0])
+        z1 = self.encoder(support[0][0])
+        z2 = generative(z1, z_prototypes[0])
         #z2 = self.decoder(z1)
         #uns_loss = uns_loss + tf.reduce_sum(z2-z1)
         z_query = z[n_class * n_support:]
