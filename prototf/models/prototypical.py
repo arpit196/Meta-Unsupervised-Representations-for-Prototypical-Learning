@@ -129,7 +129,7 @@ class Prototypical(Model):
         self.uns_enc = tf.keras.Sequential()
         self.uns_enc.add(self.l14)
         self.uns_enc.add(tf.keras.layers.ReLU())
-        self.uns_enc.add(tf.keras.layers.Dense(50))
+        self.uns_enc.add(tf.keras.layers.Dense(150))
         '''
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape(60,30,30))
@@ -193,7 +193,7 @@ class Prototypical(Model):
             cnt=0
             enc1 = tf.expand_dims(z1[clss, img1,:],axis=0)
             tot_loss = 0
-            enc_aug = self.encoder(tf.expand_dims(tf.image.flip_left_right(support[clss][img1]),axis=0))
+            enc_aug = self.uns_enc(self.encoder(tf.expand_dims(tf.image.flip_left_right(support[clss][img1]),axis=0)))
             cnt+=1
             tot_loss = tot_loss + (calc_euclidian_dists(enc1,enc_aug)**2)
             for img2 in range(n_support):
