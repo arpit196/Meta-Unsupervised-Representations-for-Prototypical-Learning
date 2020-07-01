@@ -180,6 +180,7 @@ class Prototypical(Model):
         
         
         z = self.encoder(cat)
+        '''
         z_uns = self.uns_enc(z)
         print("zshape")
         print(z.shape)
@@ -211,7 +212,7 @@ class Prototypical(Model):
                 
             uns_loss = uns_loss + tot_loss/(cnt*1.0)
             uns_loss = uns_loss + 0.5
-        
+        '''
         
         #z_meta = self.encoder(cat)
         
@@ -237,7 +238,7 @@ class Prototypical(Model):
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
 
-        z_prototypes = tf.math.reduce_max(z_prototypes, axis=1)
+        z_prototypes = tf.math.reduce_mean(z_prototypes, axis=1)
         #z1 = self.encoder(support[0][0])
         #z2 = generative(z1, z_prototypes[0])
         #z2 = self.decoder(z1)
@@ -251,7 +252,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + uns_loss 
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) 
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
