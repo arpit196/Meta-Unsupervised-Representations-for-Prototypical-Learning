@@ -85,46 +85,48 @@ class Prototypical(Model):
         #                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
-        self.meta_enc1 = tf.keras.Sequential([
-            tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
-        )
+        inputs1 = Input(shape=())
+        meta_enc1 = tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same')(inputs1)
+        meta_enc1 = tf.keras.layers.BatchNormalization()(meta_enc1)
+        meta_enc1 = tf.keras.layers.ReLU()(meta_enc1)
+        meta_enc1 = tf.keras.layers.MaxPool2D((2, 2))(meta_enc1)
+        meta_enc1 = Flatten()(meta_enc1)
         
-        self.l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l3=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l4=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l5=  tf.keras.layers.BatchNormalization()
-        self.l6=  tf.keras.layers.ReLU()
-        self.l7=  tf.keras.layers.MaxPool2D((2, 2))
+        self.l1= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l2= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l3= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l4= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
+        self.l5= tf.keras.layers.BatchNormalization()
+        self.l6= tf.keras.layers.ReLU()
+        self.l7= tf.keras.layers.MaxPool2D((2, 2))
 
         self.l8=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l9=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l10 = SelfAttention()
+        self.l10= SelfAttention()
         
-        self.l11=    tf.keras.layers.BatchNormalization()
-        self.l12=    tf.keras.layers.ReLU()
-        self.l13=    tf.keras.layers.MaxPool2D((2, 2))
-        self.l14 =  Flatten()
+        self.l11= tf.keras.layers.BatchNormalization()
+        self.l12= tf.keras.layers.ReLU()
+        self.l13= tf.keras.layers.MaxPool2D((2, 2))
+        self.l14= Flatten()
         
-        self.encoder = tf.keras.Sequential()
-        self.encoder.add(self.l1)
-        self.encoder.add(self.l2)
-        self.encoder.add(self.l3)
-        self.encoder.add(self.l4)
-        self.encoder.add(self.l5)
-        self.encoder.add(self.l6)
-        self.encoder.add(self.l7)
-        self.encoder.add(self.l8)
-        self.encoder.add(self.l9)
-        self.encoder.add(self.l10)
-        self.encoder.add(self.l11)
-        self.encoder.add(self.l12)
-        self.encoder.add(self.l13)
-        self.encoder.add(self.l14)
+        encoder=self.l1(inputs1)
+        encoder=self.l2(encoder)
+        encoder=self.l3(encoder)
+        encoder=self.l4(encoder)
+        encoder=self.l5(encoder)
+        encoder=self.l6(encoder)
+        encoder=self.l7(encoder)
+        encoder=self.l8(encoder)
+        encoder=self.l9(encoder)
+        encoder=self.l10(encoder)
+        encoder=self.l11(encoder)
+        encoder=self.l12(encoder)
+        encoder=self.l13(encoder)
+        encoder=self.l14(encoder)
         
+        meta_att = tf.keras.layers.Attention([meta_enc1, encoder]) 
+        self.encoder = Model(inputs = inputs1, outputs = encoder)
+        self.meta_encoder = Model(inputs = inputs1, outputs = meta_att)
         '''
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape(60,30,30))
@@ -226,6 +228,7 @@ class Prototypical(Model):
         '''
         #z = self.encoder(cat)
         # Divide embedding into support and query
+        z_prototypes = self.meta_encoder(cat)
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
 
