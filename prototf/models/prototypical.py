@@ -21,7 +21,7 @@ def calc_euclidian_dists(x, y):
     return tf.reduce_mean(tf.math.pow(x - y, 2), 2)
 
 def hw_flatten(x):
-    return tf.reshape(x, shape=[x.shape[0], -1, x.shape[-1]])
+    return tf.reshape(x, [x.shape[0], -1, x.shape[-1]])
 
 class SelfAttention(tf.keras.layers.Layer):
     def __init__(self, units=32, input_dim=32):
