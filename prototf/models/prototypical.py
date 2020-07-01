@@ -85,13 +85,12 @@ class Prototypical(Model):
         #                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
-        '''
         self.meta_enc1 = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.ReLU(),
             tf.keras.layers.MaxPool2D((2, 2)), Flatten()]
-        )'''
+        )
         
         self.l1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l2 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
