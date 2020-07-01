@@ -85,7 +85,7 @@ class Prototypical(Model):
         #                      name="W")
 
         # Encoder as ResNet like CNN with 4 blocks
-        inputs1 = Input(shape=())
+        inputs1 = Input(shape=(self.w, self.h, self.c))
         meta_enc1 = tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same')(inputs1)
         meta_enc1 = tf.keras.layers.BatchNormalization()(meta_enc1)
         meta_enc1 = tf.keras.layers.ReLU()(meta_enc1)
