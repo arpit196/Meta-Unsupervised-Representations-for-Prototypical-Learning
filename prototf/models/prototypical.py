@@ -126,10 +126,6 @@ class Prototypical(Model):
         self.encoder.add(self.l13)
         self.encoder.add(self.l14)
         
-        self.uns_enc = tf.keras.Sequential()
-        self.uns_enc.add(self.l14)
-        self.uns_enc.add(tf.keras.layers.ReLU())
-        self.uns_enc.add(tf.keras.layers.Dense(50))
         '''
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape(60,30,30))
@@ -164,8 +160,6 @@ class Prototypical(Model):
         y = np.tile(np.arange(n_class)[:, np.newaxis], (1, n_query))
         y_onehot = tf.cast(tf.one_hot(y, n_class), tf.float32)
         
-        uns_loss = 0
-        
         # correct indices of support samples (just natural order)
         target_inds = tf.reshape(tf.range(n_class), [n_class, 1])
         target_inds = tf.tile(target_inds, [1, n_query])
@@ -176,8 +170,6 @@ class Prototypical(Model):
                                  self.w, self.h, self.c]),
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
-        
-        
         
         z = self.encoder(cat)
         '''
