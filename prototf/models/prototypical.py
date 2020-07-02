@@ -47,7 +47,9 @@ class SelfAttention(tf.keras.layers.Layer):
 
         o = tf.matmul(beta, hw_flatten(h)) # [bs, N, C]
         
-        o = tf.reshape(o, shape=inputs.shape) # [bs, h, w, C]
+        o = tf.reshape(o, shape=tf.shape(inputs)) # [bs, h, w, C]
+        #o = tf.reshape(o, shape=tf.shape(inputs.shape)) # [bs, h, w, C]
+
         o = self.o1(o)
         
         inputs = self.gamma * o + inputs
