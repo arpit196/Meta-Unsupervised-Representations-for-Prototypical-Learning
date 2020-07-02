@@ -128,7 +128,7 @@ class Prototypical(Model):
         encoder=self.l13(encoder)
         encoder=self.l14(encoder)
         
-        meta_att = tf.keras.layers.Attention([meta_enc1, encoder]) 
+        meta_att = tf.keras.layers.Attention()([meta_enc1, encoder]) 
         self.encoder = Model(inputs = inputs1, outputs = encoder)
         self.meta_encoder = Model(inputs = inputs1, outputs = meta_att)
         '''
