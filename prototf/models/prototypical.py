@@ -87,7 +87,7 @@ class Prototypical(Model):
         #                     name="W")
         #self.W = tf.Variable(tf.random.truncated_normal([19]),
         #                      name="W")
-
+        self.W = tf.Variable(tf.random.truncated_normal([16]), name="W")
         # Encoder as ResNet like CNN with 4 blocks
         inputs1 = tf.keras.layers.Input(shape=(self.w, self.h, self.c))
         meta_enc1 = tf.keras.layers.Conv2D(filters=32, kernel_size=3, padding='same')(inputs1)
@@ -126,6 +126,7 @@ class Prototypical(Model):
         encoder=self.l11(encoder)
         encoder=self.l12(encoder)
         encoder=self.l13(encoder)
+        encoder=tf.keras.layers.Attention()([self.W, encoder])
         print(encoder)
         encoder=self.l14(encoder)
         
