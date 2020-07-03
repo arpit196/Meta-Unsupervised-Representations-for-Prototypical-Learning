@@ -114,28 +114,28 @@ class Prototypical(Model):
         self.l14= Flatten()
         
         encoder=self.l1(inputs1)
-        encoder=self.l2(encoder)
-        encoder=self.l3(encoder)
-        encoder=self.l4(encoder)
-        encoder=self.l5(encoder)
-        encoder=self.l6(encoder)
-        encoder=self.l7(encoder)
-        encoder=self.l8(encoder)
-        encoder=self.l9(encoder)
-        encoder=self.l10(encoder)
-        encoder=self.l11(encoder)
-        encoder=self.l12(encoder)
-        encoder=self.l13(encoder)
-        encoder=tf.keras.layers.Attention()([self.W, encoder])
-        print(encoder)
-        encoder=self.l14(encoder)
+        encoder1=self.l2(encoder)
+        encoder2=self.l3(encoder1)
+        encoder3=self.l4(encoder2)
+        encoder4=self.l5(encoder3)
+        encoder6=self.l6(encoder5)
+        encoder7=self.l7(encoder6)
+        encoder8=self.l8(encoder7)
+        encoder9=self.l9(encoder8)
+        encoder10=self.l10(encoder9)
+        encoder11=self.l11(encoder10)
+        encoder12=self.l12(encoder11)
+        encoder13=self.l13(encoder12)
+        encoder14=tf.keras.layers.Attention()([self.W, encoder13, encoder13])
+        print(encoder14)
+        encoder15=self.l14(encoder14)
         
         #meta_att = tf.keras.layers.Attention()([meta_enc1, encoder]) 
-        self.encoder = Model(inputs = inputs1, outputs = encoder)
+        self.encoder = Model(inputs = inputs1, outputs = encoder15)
+        self.uns_enc = Model(inputs = inputs1, outputs = encoder13)
         #self.meta_encoder = Model(inputs = inputs1, outputs = meta_att)
-        '''
         self.decoder = tf.keras.Sequential()
-        self.decoder.add(tf.keras.layers.Reshape(60,30,30))
+        #self.decoder.add(tf.keras.layers.Reshape(tf.shape(encoder14))
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2)))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
@@ -144,7 +144,7 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
-        '''
+        
         '''
         self.meta_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
@@ -166,7 +166,7 @@ class Prototypical(Model):
         n_query = query.shape[1]
         y = np.tile(np.arange(n_class)[:, np.newaxis], (1, n_query))
         y_onehot = tf.cast(tf.one_hot(y, n_class), tf.float32)
-        
+        uns_loss = 0
         # correct indices of support samples (just natural order)
         target_inds = tf.reshape(tf.range(n_class), [n_class, 1])
         target_inds = tf.tile(target_inds, [1, n_query])
@@ -178,7 +178,13 @@ class Prototypical(Model):
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
         
+        for im in cat:
+            rep = self.uns_enc(im)
+            recon = self.decoder(rep)
+            uns_loss = tf.nn.l2_loss(im - recon)
+            
         z = self.encoder(cat)
+        
         '''
         z_uns = self.uns_enc(z)
         print("zshape")
@@ -252,7 +258,7 @@ class Prototypical(Model):
         log_p_y = tf.nn.log_softmax(-dists, axis=-1)
         log_p_y = tf.reshape(log_p_y, [n_class, n_query, -1])
         
-        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) 
+        loss = -tf.reduce_mean(tf.reshape(tf.reduce_sum(tf.multiply(y_onehot, log_p_y), axis=-1), [-1])) + uns_loss
         eq = tf.cast(tf.equal(
             tf.cast(tf.argmax(log_p_y, axis=-1), tf.int32), 
             tf.cast(y, tf.int32)), tf.float32)
