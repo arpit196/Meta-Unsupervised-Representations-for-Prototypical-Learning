@@ -180,10 +180,11 @@ class Prototypical(Model):
         
         print(cat.shape)
         for im in cat:
+            img =tf.expand_dims(im,axis=0)
             print(im.shape)
-            rep = self.uns_enc(im)
+            rep = self.uns_enc(img)
             recon = self.decoder(rep)
-            uns_loss += tf.nn.l2_loss(im - recon)
+            uns_loss += tf.nn.l2_loss(img - recon)
         
         
         z = self.encoder(cat)
