@@ -144,6 +144,7 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
+        self.decoder.add(tf.keras.layers.Conv2D(filters=1, kernel_size=1, padding='same'))
         
         '''
         self.meta_encoder = tf.keras.Sequential([
@@ -188,7 +189,7 @@ class Prototypical(Model):
             print(img.shape)
             print("recon")
             print(recon.shape)
-            uns_loss += tf.nn.l2_loss(tf.cast(img,tf.float32) - tf.cast(recon,tf.float32))
+            uns_loss += tf.nn.l2_loss(img-recon)
         
         
         z = self.encoder(cat)
