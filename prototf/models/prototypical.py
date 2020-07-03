@@ -181,7 +181,7 @@ class Prototypical(Model):
         for im in cat:
             rep = self.uns_enc(im)
             recon = self.decoder(rep)
-            uns_loss = tf.nn.l2_loss(im - recon)
+            uns_loss += tf.nn.l2_loss(im - recon)
             
         z = self.encoder(cat)
         
