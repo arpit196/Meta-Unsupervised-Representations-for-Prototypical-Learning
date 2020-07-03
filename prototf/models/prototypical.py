@@ -167,7 +167,7 @@ class Prototypical(Model):
         n_query = query.shape[1]
         y = np.tile(np.arange(n_class)[:, np.newaxis], (1, n_query))
         y_onehot = tf.cast(tf.one_hot(y, n_class), tf.float32)
-        uns_loss = 0
+        uns_loss = 0.0
         # correct indices of support samples (just natural order)
         target_inds = tf.reshape(tf.range(n_class), [n_class, 1])
         target_inds = tf.tile(target_inds, [1, n_query])
@@ -189,7 +189,7 @@ class Prototypical(Model):
             print(img.shape)
             print("recon")
             print(recon.shape)
-            uns_loss += tf.nn.l2_loss(img-recon)
+            uns_loss += (tf.reduce_sum((img-recon)**2))/2
         
         
         z = self.encoder(cat)
