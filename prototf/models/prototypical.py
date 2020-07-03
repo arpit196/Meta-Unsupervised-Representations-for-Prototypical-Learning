@@ -178,11 +178,14 @@ class Prototypical(Model):
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
         
+        print(cat.shape)
         for im in cat:
+            print(im.shape)
             rep = self.uns_enc(im)
             recon = self.decoder(rep)
             uns_loss += tf.nn.l2_loss(im - recon)
-            
+        
+        
         z = self.encoder(cat)
         
         '''
