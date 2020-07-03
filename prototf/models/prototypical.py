@@ -118,7 +118,7 @@ class Prototypical(Model):
         encoder2=self.l3(encoder1)
         encoder3=self.l4(encoder2)
         encoder4=self.l5(encoder3)
-        encoder6=self.l6(encoder5)
+        encoder6=self.l6(encoder4)
         encoder7=self.l7(encoder6)
         encoder8=self.l8(encoder7)
         encoder9=self.l9(encoder8)
