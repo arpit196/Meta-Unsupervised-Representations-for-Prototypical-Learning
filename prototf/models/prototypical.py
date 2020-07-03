@@ -126,11 +126,12 @@ class Prototypical(Model):
         encoder=self.l11(encoder)
         encoder=self.l12(encoder)
         encoder=self.l13(encoder)
+        print(encoder)
         encoder=self.l14(encoder)
         
-        meta_att = tf.keras.layers.Attention()([meta_enc1, encoder]) 
+        #meta_att = tf.keras.layers.Attention()([meta_enc1, encoder]) 
         self.encoder = Model(inputs = inputs1, outputs = encoder)
-        self.meta_encoder = Model(inputs = inputs1, outputs = meta_att)
+        #self.meta_encoder = Model(inputs = inputs1, outputs = meta_att)
         '''
         self.decoder = tf.keras.Sequential()
         self.decoder.add(tf.keras.layers.Reshape(60,30,30))
@@ -232,7 +233,7 @@ class Prototypical(Model):
         '''
         #z = self.encoder(cat)
         # Divide embedding into support and query
-        z_prototypes = self.meta_encoder(cat)
+        #z_prototypes = self.meta_encoder(cat)
         z_prototypes = tf.reshape(z[:n_class * n_support],
                                   [n_class, n_support, z.shape[-1]])
 
