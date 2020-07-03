@@ -184,7 +184,7 @@ class Prototypical(Model):
             print(im.shape)
             rep = self.uns_enc(img)
             recon = self.decoder(rep)
-            uns_loss += tf.nn.l2_loss(img - recon)
+            uns_loss += tf.nn.l2_loss(tf.cast(img,tf.float32) - tf.cast(recon,tf.float32))
         
         
         z = self.encoder(cat)
