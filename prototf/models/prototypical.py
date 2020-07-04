@@ -125,7 +125,9 @@ class Prototypical(Model):
         encoder11=self.l11(encoder9)
         encoder12=self.l12(encoder11)
         encoder13=self.l13(encoder12)
+        print(encoder13)
         encoder14=tf.keras.layers.Attention()([meta_enc1, encoder13, encoder13])
+        print(encoder14)
         encoder15=self.l14(encoder14)
         
         #meta_att = tf.keras.layers.Attention()([meta_enc1, encoder]) 
