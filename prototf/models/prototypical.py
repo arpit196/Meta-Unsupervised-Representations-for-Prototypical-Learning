@@ -94,6 +94,8 @@ class Prototypical(Model):
         meta_enc1 = tf.keras.layers.BatchNormalization()(meta_enc1)
         meta_enc1 = tf.keras.layers.ReLU()(meta_enc1)
         meta_enc1 = tf.keras.layers.MaxPool2D((2, 2))(meta_enc1)
+        meta_enc1 = tf.keras.layers.GlobalAveragePooling2D(meta_enc1)
+        print(meta_enc1)
         meta_enc1 = Flatten()(meta_enc1)
         
         self.l1= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
@@ -126,14 +128,14 @@ class Prototypical(Model):
         encoder11=self.l11(encoder10)
         encoder12=self.l12(encoder11)
         encoder13=self.l13(encoder12)
-        encoder14=tf.keras.layers.Attention()([self.W, encoder13, encoder13])
-        print(encoder14)
+        encoder14=tf.keras.layers.Attention()([meta_enc1, encoder13, encoder13])
         encoder15=self.l14(encoder14)
         
         #meta_att = tf.keras.layers.Attention()([meta_enc1, encoder]) 
         self.encoder = Model(inputs = inputs1, outputs = encoder15)
-        self.uns_enc = Model(inputs = inputs1, outputs = encoder13)
-        #self.meta_encoder = Model(inputs = inputs1, outputs = meta_att)
+        #self.meta_encoder = Model(inputs = inputs1, outputs = meta_enc1)
+        
+        '''
         self.decoder = tf.keras.Sequential()
         #self.decoder.add(tf.keras.layers.Reshape(tf.shape(encoder14))
         self.decoder.add(tf.keras.layers.UpSampling2D((2, 2)))
@@ -145,8 +147,8 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=1, kernel_size=1, padding='same'))
-        
         '''
+        
         self.meta_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
