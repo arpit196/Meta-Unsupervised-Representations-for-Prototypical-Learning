@@ -96,7 +96,6 @@ class Prototypical(Model):
         meta_enc1 = tf.keras.layers.MaxPool2D((2, 2))(meta_enc1)
         meta_enc1 = tf.keras.layers.GlobalAveragePooling2D(meta_enc1)
         print(meta_enc1)
-        meta_enc1 = Flatten()(meta_enc1)
         
         self.l1= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l2= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
@@ -148,7 +147,7 @@ class Prototypical(Model):
         self.decoder.add(tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'))
         self.decoder.add(tf.keras.layers.Conv2D(filters=1, kernel_size=1, padding='same'))
         '''
-        
+        '''
         self.meta_encoder = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same'),
             tf.keras.layers.BatchNormalization(),
@@ -180,18 +179,6 @@ class Prototypical(Model):
                                  self.w, self.h, self.c]),
             tf.reshape(query, [n_class * n_query,
                                self.w, self.h, self.c])], axis=0)
-        
-        print(cat.shape)
-        for im in cat:
-            img =tf.expand_dims(im,axis=0)
-            print(im.shape)
-            rep = self.uns_enc(img)
-            recon = self.decoder(rep)
-            print("img")
-            print(img.shape)
-            print("recon")
-            print(recon.shape)
-            uns_loss += (tf.reduce_sum((img-recon)**2))/2
         
         
         z = self.encoder(cat)
