@@ -105,7 +105,7 @@ class Prototypical(Model):
 
         self.l8=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l9=  tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
-        self.l10= SelfAttention()
+        #self.l10= SelfAttention()
         
         self.l11= tf.keras.layers.BatchNormalization()
         self.l12= tf.keras.layers.ReLU()
