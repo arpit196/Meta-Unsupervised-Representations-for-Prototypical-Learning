@@ -92,6 +92,7 @@ class Prototypical(Model):
         meta_enc1 = tf.keras.layers.BatchNormalization()(meta_enc1)
         meta_enc1 = tf.keras.layers.ReLU()(meta_enc1)
         meta_enc1 = tf.keras.layers.MaxPool2D((2, 2))(meta_enc1)
+        meta_enc1 = tf.keras.layers.MaxPool2D((2, 2))(meta_enc1)
         meta_enc1 = tf.keras.layers.GlobalAveragePooling2D()(meta_enc1)
         print(meta_enc1)
         
