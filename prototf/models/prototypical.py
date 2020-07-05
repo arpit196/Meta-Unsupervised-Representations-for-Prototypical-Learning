@@ -85,8 +85,9 @@ class Prototypical(Model):
         self.w, self.h, self.c = w, h, c
         #self.W = tf.Variable(tf.random.truncated_normal([3136]),
         #                     name="W")
-        #self.W = tf.Variable(tf.random.truncated_normal([1,16]), name="W")
+        self.W = tf.Variable(tf.random.truncated_normal([1,16]), name="W")
         # Encoder as ResNet like CNN with 4 blocks
+        '''
         inputs1 = tf.keras.layers.Input(shape=(self.w, self.h, self.c))
         meta_enc1 = tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')(inputs1)
         meta_enc1 = tf.keras.layers.BatchNormalization()(meta_enc1)
@@ -94,6 +95,7 @@ class Prototypical(Model):
         meta_enc1 = tf.keras.layers.MaxPool2D((2, 2))(meta_enc1)
         meta_enc1 = tf.keras.layers.GlobalAveragePooling2D()(meta_enc1)
         print(meta_enc1)
+        '''
         
         self.l1= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
         self.l2= tf.keras.layers.Conv2D(filters=16, kernel_size=3, padding='same')
@@ -126,7 +128,7 @@ class Prototypical(Model):
         encoder12=self.l12(encoder11)
         encoder13=self.l13(encoder12)
         print(encoder13)
-        encoder14=tf.keras.layers.Attention()([meta_enc1, encoder13, encoder13])
+        encoder14=tf.keras.layers.Attention()([self.W, encoder13, encoder13])
         print(encoder14)
         encoder15=self.l14(encoder14)
         
